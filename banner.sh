@@ -1,4 +1,14 @@
 #!/data/data/com.termux/files/usr/bin/bash
+
+# Auto-center function
+print_center() {
+    local term_width=$(tput cols)
+    local text="$1"
+    local padding=$(( (term_width - ${#text}) / 2 ))
+    if [ $padding -lt 0 ]; then padding=0; fi
+    printf "%${padding}s%s\n" "" "$text"
+}
+
 R='\e[1;31m'
 G='\e[1;32m'
 C='\e[1;36m'
