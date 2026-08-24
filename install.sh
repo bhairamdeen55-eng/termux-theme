@@ -1,44 +1,70 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # ============================================
-#  TERMUX CUSTOM THEME INSTALLER
-#  Team Banner + Voice Welcome + Login + Colors
+#  TEAMVB THEME INSTALLER
 # ============================================
 
 set -e
-
-TEAM_NAME="TEAMVB"
-VOICE_MESSAGE="Welcome back TEAMVB servers, I hope you are fine"
 THEME_DIR="$HOME/.termux-theme"
+TERMUX_CFG="$HOME/.termux"
 
 echo ""
-echo "=================================================="
-echo "   Installing $TEAM_NAME Termux Theme..."
-echo "=================================================="
+echo "  ╔═══════════════════════════════════════╗"
+echo "  ║    Installing TEAMVB Termux Theme     ║"
+echo "  ╚═══════════════════════════════════════╝"
 echo ""
 
-# 1. Update & install required packages
+# 1. Packages
 pkg update -y
 pkg install -y figlet toilet termux-api python
 
-# grc (command output colorizer) - optional, installed via pip since it's
-# not in the default Termux repo
-pip install grc 2>/dev/null || echo "[!] grc install skipped (optional, not critical)"
-
-# 2. Setup Termux:API (voice needs the Termux:API app installed from Play/F-Droid too)
-echo "[*] Make sure you also install the 'Termux:API' app from Play Store / F-Droid"
-
-# 3. Create theme directory
+# 2. Create theme directory and copy files
 mkdir -p "$THEME_DIR"
-cp -r ./assets/* "$THEME_DIR/" 2>/dev/null || true
-cp ./banner.sh "$THEME_DIR/banner.sh"
-cp ./login.sh "$THEME_DIR/login.sh"
-cp ./colors.sh "$THEME_DIR/colors.sh"
-chmod +x "$THEME_DIR/banner.sh" "$THEME_DIR/login.sh" "$THEME_DIR/colors.sh"
+cp ./login.sh     "$THEME_DIR/login.sh"
+cp ./banner.sh    "$THEME_DIR/banner.sh"
+cp ./colors.sh    "$THEME_DIR/colors.sh"
 
-# 4. Hook into .bashrc so it runs on every Termux launch/restart
+# Copy voice.mp3 if it exists in the repo
+if [ -f "./voice.mp3" ]; then
+    cp ./voice.mp3 "$THEME_DIR/voice.mp3"
+    echo "  [+] voice.mp3 copied to theme folder"
+else
+    echo "  [!] voice.mp3 not found in repo — TTS fallback will be used"
+fi
+
+chmod +x "$THEME_DIR/login.sh" "$THEME_DIR/banner.sh" "$THEME_DIR/colors.sh"
+
+# 3. Set default terminal color to GREEN (fixes white text in all commands)
+mkdir -p "$TERMUX_CFG"
+cat > "$TERMUX_CFG/colors.properties" << 'EOF'
+background=#000000
+foreground=#00ff00
+color0=#000000
+color1=#ff3333
+color2=#00ff00
+color3=#ffff00
+color4=#3399ff
+color5=#cc44ff
+color6=#00ffff
+color7=#00ff00
+color8=#555555
+color9=#ff6666
+color10=#66ff66
+color11=#ffff66
+color12=#66aaff
+color13=#dd88ff
+color14=#66ffff
+color15=#00ff00
+EOF
+echo "  [+] Terminal color set to green (all output will be green now)"
+
+# Reload terminal colors
+if command -v termux-reload-settings >/dev/null 2>&1; then
+    termux-reload-settings
+fi
+
+# 4. Hook into .bashrc
 BASHRC="$HOME/.bashrc"
 touch "$BASHRC"
-
 if ! grep -q "termux-theme" "$BASHRC"; then
 cat >> "$BASHRC" << 'EOF'
 
@@ -51,6 +77,6 @@ EOF
 fi
 
 echo ""
-echo "[+] Installation complete!"
-echo "[+] Restart Termux now to see your theme in action."
+echo "  [+] Installation complete!"
+echo "  [+] Close and reopen Termux to see TEAMVB theme."
 echo ""
