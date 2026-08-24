@@ -33,7 +33,7 @@ This is required for `termux-tts-speak` (voice welcome) to work.
 
 ```bash
 pkg install git -y
-git clone https://github.com/YOUR_USERNAME/termux-theme.git
+git clone(https://github.com/bhairamdeen55-eng/termux-theme.git)
 cd termux-theme
 bash install.sh
 ```
