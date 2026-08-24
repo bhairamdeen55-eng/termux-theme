@@ -14,6 +14,14 @@ C='\e[1;36m'
 Y='\e[1;33m'
 X='\e[0m'
 
+# Voice play command (Runs secretly in background)
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VOICE_FILE="$DIR/voice.mp3"
+
+if [ -f "$VOICE_FILE" ]; then
+    play-audio "$VOICE_FILE" >/dev/null 2>&1 &
+fi
+
 print_vip_banner() {
 clear
 echo -e "${Y}"
