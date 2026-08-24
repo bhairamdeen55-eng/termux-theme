@@ -18,7 +18,11 @@ echo ""
 
 # 1. Update & install required packages
 pkg update -y
-pkg install -y figlet toilet lolcat termux-api grc python
+pkg install -y figlet toilet termux-api python
+
+# grc (command output colorizer) - optional, installed via pip since it's
+# not in the default Termux repo
+pip install grc 2>/dev/null || echo "[!] grc install skipped (optional, not critical)"
 
 # 2. Setup Termux:API (voice needs the Termux:API app installed from Play/F-Droid too)
 echo "[*] Make sure you also install the 'Termux:API' app from Play Store / F-Droid"
