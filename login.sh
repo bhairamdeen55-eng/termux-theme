@@ -1,43 +1,57 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # ============================================
-#  TEAMVB LOGIN SCREEN - fully self-contained
+#  TEAMVB LOGIN SCREEN - VIP Style
 # ============================================
 
 THEME_DIR="$HOME/.termux-theme"
 CRED_FILE="$THEME_DIR/.creds"
-R='\e[1;31m'   # Red
-B='\e[1;34m'   # Blue
-G='\e[1;32m'   # Green
-Y='\e[1;33m'   # Yellow
-X='\e[0m'      # Reset
+VOICE_FILE="$THEME_DIR/voice.mp3"
 
-print_big_banner() {
-    echo -e "$G"
-    echo "  ████████╗███████╗ █████╗ ███╗   ███╗"
-    echo "     ██╔══╝██╔════╝██╔══██╗████╗ ████║"
-    echo "     ██║   █████╗  ███████║██╔████╔██║"
-    echo "     ██║   ██╔══╝  ██╔══██║██║╚██╔╝██║"
-    echo "     ██║   ███████╗██║  ██║██║ ╚═╝ ██║"
-    echo "     ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝"
-    echo ""
-    echo "        ██╗   ██╗██████╗ "
-    echo "        ██║   ██║██╔══██╗"
-    echo "        ██║   ██║██████╔╝"
-    echo "        ╚██╗ ██╔╝██╔══██╗"
-    echo "         ╚████╔╝ ██████╔╝"
-    echo "          ╚═══╝  ╚═════╝ "
-    echo -e "$X"
+R='\e[1;31m'
+B='\e[1;34m'
+G='\e[1;32m'
+C='\e[1;36m'
+Y='\e[1;33m'
+X='\e[0m'
+
+print_vip_banner() {
+clear
+echo -e "${Y}"
+echo "  ╔═══════════════════════════════════════╗"
+echo "  ║  ⚡ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ⚡  ║"
+echo "  ║        V I P   A C C E S S           ║"
+echo "  ║  ⚡ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ⚡  ║"
+echo "  ╚═══════════════════════════════════════╝"
+echo -e "$X"
+echo -e "${G}"
+echo "  ████████╗███████╗ █████╗ ███╗   ███╗"
+echo "     ██╔══╝██╔════╝██╔══██╗████╗ ████║"
+echo "     ██║   █████╗  ███████║██╔████╔██║"
+echo "     ██║   ██╔══╝  ██╔══██║██║╚██╔╝██║"
+echo "     ██║   ███████╗██║  ██║██║ ╚═╝ ██║"
+echo "     ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝"
+echo -e "${C}"
+echo "        ██╗   ██╗██████╗"
+echo "        ██║   ██║██╔══██╗"
+echo "        ██║   ██║██████╔╝"
+echo "        ╚██╗ ██╔╝██╔══██╗"
+echo "         ╚████╔╝ ██████╔╝"
+echo "          ╚═══╝  ╚═════╝"
+echo -e "${Y}"
+echo "  ╔═══════════════════════════════════════╗"
+echo "  ║    ◈ ELITE  HACKING  UNIT  2026 ◈   ║"
+echo "  ╚═══════════════════════════════════════╝"
+echo -e "$X"
 }
 
-print_subtitle() {
-    echo -e "${R}╔══════════════════════════════════════╗${X}"
-    echo -e "${B}║      TEAMVB  AGENT  LOGIN  PANEL     ║${X}"
-    echo -e "${R}╚══════════════════════════════════════╝${X}"
-    echo ""
+print_login_box() {
+echo -e "${R}  ╔═══════════════════════════════════════╗"
+echo -e "  ║      TEAMVB  AGENT  LOGIN  PANEL      ║"
+echo -e "  ╚═══════════════════════════════════════╝${X}"
+echo ""
 }
 
 do_hash() {
-    # sha256sum with fallback to openssl
     if command -v sha256sum >/dev/null 2>&1; then
         echo -n "$1" | sha256sum | awk '{print $1}'
     else
@@ -45,26 +59,33 @@ do_hash() {
     fi
 }
 
+play_voice() {
+    if [ -f "$VOICE_FILE" ]; then
+        if command -v termux-media-player >/dev/null 2>&1; then
+            termux-media-player play "$VOICE_FILE" >/dev/null 2>&1 &
+        elif command -v mpv >/dev/null 2>&1; then
+            mpv --no-video "$VOICE_FILE" >/dev/null 2>&1 &
+        fi
+    elif command -v termux-tts-speak >/dev/null 2>&1; then
+        termux-tts-speak "Welcome back TEAMVB servers, I hope you are fine" >/dev/null 2>&1 &
+    fi
+}
+
 boot_sequence() {
     clear
-    echo -e "$G"
-    if command -v termux-tts-speak >/dev/null 2>&1; then
-        termux-tts-speak "Welcome back TEAMVB servers, I hope you are fine" >/dev/null 2>&1 &
-    else
-        echo -e "${Y}[!] Install 'Termux:API' app from Play Store for voice.${X}"
-        echo ""
-    fi
+    echo -e "${G}"
+    play_voice
     LINES=(
-        "[  OK  ] Initializing TEAMVB secure shell..."
-        "[  OK  ] Mounting encrypted filesystem..."
-        "[  OK  ] Loading network interfaces..."
-        "[  OK  ] Establishing secure tunnel..."
-        "[  OK  ] Verifying agent credentials..."
-        "[  OK  ] Syncing team keys..."
-        "[  OK  ] Checking server integrity..."
-        "[  OK  ] Loading command modules..."
-        "[  OK  ] Starting session logger..."
-        "[  OK  ] All systems nominal. Welcome Agent!"
+        "  [  OK  ] Initializing TEAMVB secure shell..."
+        "  [  OK  ] Mounting encrypted filesystem..."
+        "  [  OK  ] Loading network interfaces..."
+        "  [  OK  ] Establishing secure tunnel..."
+        "  [  OK  ] Verifying agent credentials..."
+        "  [  OK  ] Syncing team keys..."
+        "  [  OK  ] Checking server integrity..."
+        "  [  OK  ] Loading command modules..."
+        "  [  OK  ] Starting session logger..."
+        "  [  OK  ] All systems nominal. Welcome Agent!"
     )
     for line in "${LINES[@]}"; do
         echo -e "${G}$line${X}"
@@ -74,47 +95,40 @@ boot_sequence() {
     sleep 0.5
 }
 
-# ────────────────────────────────────────────
-#  FIRST TIME SETUP
-# ────────────────────────────────────────────
+# ─── FIRST TIME SETUP ────────────────────────
 if [ ! -f "$CRED_FILE" ]; then
-    clear
-    print_big_banner
-    print_subtitle
+    print_vip_banner
+    print_login_box
     echo -e "${Y}  ★  FIRST TIME SETUP — Create your login  ★${X}"
     echo ""
     while true; do
-        read -p "$(echo -e ${G}  Set Username: ${X})" NEW_USER
+        read -p "$(echo -e "  ${G}Set Username : ${X}")" NEW_USER
         [ -n "$NEW_USER" ] && break
         echo -e "${R}  Username cannot be empty.${X}"
     done
     while true; do
-        read -s -p "$(echo -e ${G}  Set Password: ${X})" NEW_PASS
+        read -s -p "$(echo -e "  ${G}Set Password : ${X}")" NEW_PASS
         echo ""
         [ -n "$NEW_PASS" ] && break
         echo -e "${R}  Password cannot be empty.${X}"
     done
-    read -s -p "$(echo -e ${G}  Confirm Password: ${X})" CONFIRM_PASS
+    read -s -p "$(echo -e "  ${G}Confirm Pass : ${X}")" CONFIRM
     echo ""
-    if [ "$NEW_PASS" != "$CONFIRM_PASS" ]; then
-        echo -e "${R}  Passwords do not match! Run again.${X}"
-        sleep 2
-        exit 1
+    if [ "$NEW_PASS" != "$CONFIRM" ]; then
+        echo -e "${R}  Passwords do not match! Try again.${X}"
+        sleep 2; exit 1
     fi
     HASHED=$(do_hash "$NEW_PASS")
     echo "$NEW_USER" > "$CRED_FILE"
     echo "$HASHED"   >> "$CRED_FILE"
     chmod 600 "$CRED_FILE"
     echo ""
-    echo -e "${G}  [+] Login created for: $NEW_USER${X}"
+    echo -e "${G}  [+] Login created for: ${Y}$NEW_USER${X}"
     echo -e "${G}  [+] Close and reopen Termux to login.${X}"
-    sleep 2
-    exit 0
+    sleep 2; exit 0
 fi
 
-# ────────────────────────────────────────────
-#  NORMAL LOGIN
-# ────────────────────────────────────────────
+# ─── NORMAL LOGIN ─────────────────────────────
 STORED_USER=$(sed -n '1p' "$CRED_FILE")
 STORED_HASH=$(sed -n '2p' "$CRED_FILE")
 MAX_TRIES=3
@@ -122,17 +136,14 @@ TRY=0
 LOGIN_OK=0
 
 while [ $TRY -lt $MAX_TRIES ]; do
-    clear
-    print_big_banner
-    print_subtitle
-    read -p "$(echo -e ${G}  Username: ${X})" INPUT_USER
-    read -s -p "$(echo -e ${G}  Password: ${X})" INPUT_PASS
+    print_vip_banner
+    print_login_box
+    read -p "$(echo -e "  ${G}Username : ${X}")" INPUT_USER
+    read -s -p "$(echo -e "  ${G}Password : ${X}")" INPUT_PASS
     echo ""
     INPUT_HASH=$(do_hash "$INPUT_PASS")
-
     if [ "$INPUT_USER" = "$STORED_USER" ] && [ "$INPUT_HASH" = "$STORED_HASH" ]; then
-        LOGIN_OK=1
-        break
+        LOGIN_OK=1; break
     else
         TRY=$((TRY+1))
         echo ""
@@ -146,7 +157,6 @@ if [ $LOGIN_OK -eq 1 ]; then
 else
     clear
     echo -e "${R}  [-] Too many failed attempts.${X}"
-    echo -e "${Y}  To reset login: rm ~/.termux-theme/.creds${X}"
-    sleep 2
-    exit 1
+    echo -e "${Y}  Reset: rm ~/.termux-theme/.creds${X}"
+    sleep 2; exit 1
 fi
